@@ -12,9 +12,10 @@ def request_images(start):
                             params={
                                 'key': API_KEY,
                                 'cx': API_CX,
-                                'q': 'moldy kombucha',
+                                'q': 'kombucha first fermentation',
                                 'searchType': 'image',
-                                'start': start
+                                'start': start,
+                                'fields': 'items(image)'
                             })
     return response.json()
 
@@ -27,12 +28,14 @@ def download_file(url, path):
     return path
 
 
-start = 0
-while start < 100:
+start = 200
+end = 300
+while start < end:
     body = request_images(start)
+    import pdb; pdb.set_trace()
     for i, item in enumerate(body['items']):
         idx = start + i
         download_file(item['image']['thumbnailLink'],
-                      'images/{}.jpg'.format(idx))
+                      'images/healthy/{}.jpg'.format(idx))
 
     start = body['queries']['nextPage'][0]['startIndex']
