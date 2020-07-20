@@ -11,6 +11,7 @@ pylint = "*"
 requests = "*"
 tensorflow = "*"
 pydot = "*"
+matplotlib = "*"
 
 [requires]
 python_version = "3.8"

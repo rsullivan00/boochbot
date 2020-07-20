@@ -27,7 +27,11 @@ val_ds = tf.keras.preprocessing.image_dataset_from_directory(
 data_augmentation = keras.Sequential(
     [
         layers.experimental.preprocessing.RandomFlip("horizontal"),
+        layers.experimental.preprocessing.RandomTranslation(
+            height_factor=0.1, width_factor=0.1
+        ),
         layers.experimental.preprocessing.RandomRotation(0.1),
+        layers.experimental.preprocessing.RandomContrast(0.1),
     ]
 )
 
@@ -90,13 +94,22 @@ keras.utils.plot_model(model, show_shapes=True)
 epochs = 50
 
 callbacks = [
-    keras.callbacks.ModelCheckpoint("save_at_{epoch}.h5"),
+    keras.callbacks.ModelCheckpoint(".checkpoints/save_at_{epoch}.h5"),
 ]
 model.compile(
     optimizer=keras.optimizers.Adam(1e-3),
     loss="binary_crossentropy",
     metrics=["accuracy"],
 )
-model.fit(
+history = model.fit(
     train_ds, epochs=epochs, callbacks=callbacks, validation_data=val_ds,
 )
+
+import matplotlib.pyplot as plt
+
+plt.plot(range(1, epochs + 1), history.history["accuracy"], label="Training Accuracy")
+plt.xlabel("Epochs")
+plt.ylabel("Accuracy")
+plt.legend()
+
+plt.show()
