@@ -27,6 +27,7 @@ val_ds = tf.keras.preprocessing.image_dataset_from_directory(
 data_augmentation = keras.Sequential(
     [
         layers.experimental.preprocessing.RandomFlip("horizontal"),
+        layers.experimental.preprocessing.RandomFlip("vertical"),
         layers.experimental.preprocessing.RandomTranslation(
             height_factor=0.1, width_factor=0.1
         ),
@@ -105,11 +106,15 @@ history = model.fit(
     train_ds, epochs=epochs, callbacks=callbacks, validation_data=val_ds,
 )
 
+
 import matplotlib.pyplot as plt
 
-plt.plot(range(1, epochs + 1), history.history["accuracy"], label="Training Accuracy")
+plt.plot(range(1, epochs + 1), history.history["accuracy"], label="train")
+plt.plot(range(1, epochs + 1), history.history["val_accuracy"], label="eval")
 plt.xlabel("Epochs")
 plt.ylabel("Accuracy")
 plt.legend()
+
+plt.savefig("accuracy.png")
 
 plt.show()
