@@ -4,11 +4,12 @@ from tensorflow.keras import layers
 
 import os
 
-image_size = (140, 140)
-batch_size = 32
+image_size = (512, 512)
+batch_size = 8
+image_dir = "original-images"
 
 train_ds = tf.keras.preprocessing.image_dataset_from_directory(
-    "images",
+    image_dir,
     validation_split=0.2,
     subset="training",
     seed=1337,
@@ -16,7 +17,7 @@ train_ds = tf.keras.preprocessing.image_dataset_from_directory(
     batch_size=batch_size,
 )
 val_ds = tf.keras.preprocessing.image_dataset_from_directory(
-    "images",
+    image_dir,
     validation_split=0.2,
     subset="validation",
     seed=1337,
@@ -27,7 +28,6 @@ val_ds = tf.keras.preprocessing.image_dataset_from_directory(
 data_augmentation = keras.Sequential(
     [
         layers.experimental.preprocessing.RandomFlip("horizontal"),
-        layers.experimental.preprocessing.RandomFlip("vertical"),
         layers.experimental.preprocessing.RandomTranslation(
             height_factor=0.1, width_factor=0.1
         ),
