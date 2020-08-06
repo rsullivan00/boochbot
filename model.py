@@ -5,10 +5,10 @@ import numpy as np
 
 import os
 
-image_size = (150, 150)
+image_size = (140, 140)
 input_shape = image_size + (3,)
 batch_size = 32
-image_dir = "original-images"
+image_dir = "all-images"
 
 train_ds = tf.keras.preprocessing.image_dataset_from_directory(
     image_dir,
@@ -39,7 +39,8 @@ data_augmentation = keras.Sequential(
 )
 
 # https://keras.io/guides/transfer_learning/
-base_model = keras.applications.Xception(
+# NASNetMobile looks good
+base_model = keras.applications.NASNetMobile(
     weights="imagenet",  # Load weights pre-trained on ImageNet.
     input_shape=input_shape,
     include_top=False,
@@ -64,12 +65,12 @@ norm_layer.set_weights([mean, var])
 # base_model is running in inference mode here.
 x = base_model(x, training=False)
 x = keras.layers.GlobalAveragePooling2D()(x)
-x = keras.layers.Dropout(0.2)(x)  # Regularize with dropout
+x = keras.layers.Dropout(0.6)(x)  # Regularize with dropout
 outputs = keras.layers.Dense(1)(x)
 model = keras.Model(inputs, outputs)
 keras.utils.plot_model(model, show_shapes=True)
 
-epochs = 10
+epochs = 20
 
 model.compile(
     optimizer=keras.optimizers.Adam(1e-3),
@@ -94,7 +95,7 @@ model.compile(
     metrics=[keras.metrics.BinaryAccuracy()],
 )
 
-epochs = 10
+epochs = 2
 final_fit = model.fit(train_ds, epochs=epochs, validation_data=val_ds)
 
 train_accuracy_history = (
