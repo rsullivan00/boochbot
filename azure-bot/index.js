@@ -1,12 +1,10 @@
 const path = require('path')
 
-// Read environment variables from .env file
 const ENV_FILE = path.join(__dirname, '.env')
 require('dotenv').config({ path: ENV_FILE })
 
 const restify = require('restify')
 
-// Import required bot services.
 // See https://aka.ms/bot-services to learn more about the different parts of a bot.
 const {
   BotFrameworkAdapter,
@@ -15,7 +13,7 @@ const {
   ConversationState,
 } = require('botbuilder')
 
-const { DialogAndWelcomeBot } = require('./bots/dialogAndWelcomeBot')
+const { BoochBot } = require('./bots/boochBot')
 const { MainDialog } = require('./dialogs/mainDialog')
 
 // Create HTTP server
@@ -45,7 +43,7 @@ const conversationState = new ConversationState(memoryStorage)
 
 // Create the main dialog.
 const dialog = new MainDialog(userState)
-const bot = new DialogAndWelcomeBot(conversationState, userState, dialog)
+const bot = new BoochBot(conversationState, userState, dialog)
 
 // Catch-all for errors.
 adapter.onTurnError = async (context, error) => {
