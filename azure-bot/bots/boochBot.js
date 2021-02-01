@@ -31,13 +31,11 @@ class BoochBot extends ActivityHandler {
 
   async sendWelcomeMessage(context) {
     const membersAdded = context.activity.membersAdded
-    for (let cnt = 0; cnt < membersAdded.length; cnt++) {
-      if (membersAdded[cnt].id !== context.activity.recipient.id) {
-        await context.sendActivity(
-          `Hi ${membersAdded[cnt].name}!I'm Boochbot, I can answer questions about homebrewing kombucha.`
-        )
-      }
-    }
+    const member = membersAdded[membersAdded.length - 1]
+    const name = member.name || 'there'
+    await context.sendActivity(
+      `Hi ${name}! I'm BoochBot, I can answer questions about homebrewing kombucha.`
+    )
     await this.sendSuggestedActions(context)
   }
 
