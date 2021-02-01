@@ -12,26 +12,52 @@ class BoochBot extends ActivityHandler {
     })
 
     this.onMessage(async (context, next) => {
-      const text = context.activity.text
-
-      if (text === 'starting') {
-        await this.sendStartingInfo(context)
-      } else if (text === 'mold') {
-        await context.sendActivity('Chose mold')
-      } else if (text === 'carbonation') {
-        await context.sendActivity('Chose carbonation')
-      } else {
-        await context.sendActivity(
-          `I don't know how to respond to "${text}", sorry.`
-        )
-        await this.sendSuggestedActions(context)
+      if (context.activity.text) {
+        await this.handleTextMessage(context)
+      } else if (context.activity.attachments.length > 0) {
+        await this.handleAttachment(context)
       }
+
       await next()
     })
   }
 
+  async handleTextMessage(context) {
+    const text = context.activity.text
+
+    if (text === 'starting') {
+      await this.sendStartingInfo(context)
+    } else if (text === 'mold') {
+      await this.sendMoldInfo(context)
+    } else if (text === 'carbonation') {
+      await this.sendCarbonationInfo(context)
+    } else {
+      await context.sendActivity(
+        `I don't know how to respond to "${text}", sorry.`
+      )
+      await this.sendSuggestedActions(context)
+    }
+  }
+
+  async handleAttachment(context) {
+    const attachment = context.activity.attachments[0]
+    console.log(attachment)
+
+    await context.sendActivities([
+      { type: ActivityTypes.Typing },
+      { type: 'delay', value: 1000 },
+      {
+        type: ActivityTypes.Message,
+        text:
+          "Thanks for the upload, but I don't know how to analyze pictures yet. my creator hasn't trained me.",
+      },
+    ])
+  }
+
   async sendStartingInfo(context) {
     await context.sendActivities([
+      { type: ActivityTypes.Typing },
+      { type: 'delay', value: 1000 },
       {
         type: ActivityTypes.Message,
         text: 'This is my favorite recipe for starting out',
@@ -73,6 +99,37 @@ Once you have all the ingredients,
         type: ActivityTypes.Message,
         text:
           'If you want more information, check out [this link](https://www.reddit.com/r/kombucha/wiki/how_to_start).',
+      },
+    ])
+  }
+
+  async sendMoldInfo(context) {
+    await context.sendActivities([
+      { type: ActivityTypes.Typing },
+      { type: 'delay', value: 1000 },
+      {
+        type: ActivityTypes.Message,
+        text:
+          "Mold is typically fuzzy. If your kombucha has a shiny or bubbly looking pellicle, you're probably good to go.",
+      },
+      { type: ActivityTypes.Typing },
+      { type: 'delay', value: 1000 },
+      {
+        type: ActivityTypes.Message,
+        text:
+          "If you want, you can upload a picture of the top of your kombucha and I can try to determine if it's moldy.",
+      },
+      { type: 'delay', value: 500 },
+    ])
+  }
+
+  async sendCarbonationInfo(context) {
+    await context.sendActivities([
+      { type: ActivityTypes.Typing },
+      { type: 'delay', value: 1000 },
+      {
+        type: ActivityTypes.Message,
+        text: '[Read this](https://www.reddit.com/r/kombucha/wiki/carbonation)',
       },
     ])
   }
