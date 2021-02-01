@@ -38,8 +38,10 @@ class BoochBot extends ActivityHandler {
       },
       // TODO: Typing/delay seem to delay all messages in this batch up front,
       // not sequentially
-      // { type: ActivityTypes.Typing },
-      // { type: 'delay', value: 2000 },
+      // This might just be an emulator problem--the requests seem to come in,
+      // but the UI doesn't render the new messages.
+      { type: ActivityTypes.Typing },
+      { type: 'delay', value: 1000 },
       {
         type: ActivityTypes.Message,
         text: `
@@ -50,6 +52,8 @@ Sugar (start with plain white sugar, then experiment with others) | 1/4 cup | 70
 Tea (start with plain black tea, then experiment with others) | 3 bags or 1 Tablespoon | 7 grams
 Raw Kombucha/Starter Liquid | 1 cup | 0.2 Liter`,
       },
+      { type: ActivityTypes.Typing },
+      { type: 'delay', value: 3000 },
       {
         type: ActivityTypes.Message,
         text: `
@@ -63,6 +67,8 @@ Once you have all the ingredients,
 1. Let the bottles sit at room temperature for anywhere between 1 and 7 days, to create enough fizz. It depends on amount of sugar, the strength of your kombucha etc. For more information about timing this process and avoiding bottle bombs, check the carbonation wiki article.
 1. Refrigerate the finished bottles to stop the fermentation process and allow more CO2 to dissolve into the liquid.`,
       },
+      { type: ActivityTypes.Typing },
+      { type: 'delay', value: 2000 },
       {
         type: ActivityTypes.Message,
         text:
