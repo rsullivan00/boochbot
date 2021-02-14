@@ -42,6 +42,10 @@ def download_file(url, path):
     return path
 
 
+dirs = ["images/moldy", "images/healthy"]
+for dirpath in dirs:
+    os.makedirs(dirpath, exist_ok=True)
+
 after = None
 access_token = get_access_token()
 for page in range(20):
@@ -59,10 +63,13 @@ for page in range(20):
         if not save_to:
             continue
 
-        dir_path = "images/{}".format(save_to)
-        with open("{}/{}.json".format(dir_path, post["id"]), "w") as json_file:
+        dir_path = f"images/{save_to}"
+        with open(f"{dir_path}/{post['id']}.json", "w") as json_file:
             json.dump(post, json_file, indent=2)
-        download_file(post["thumbnail"], "{}/{}.jpg".format(dir_path, post["id"]))
+        try:
+            download_file(post["thumbnail"], f"{dir_path}/{post['id']}.jpg")
+        except requests.exceptions.MissingSchema:
+            print(f"Failed to download {post}")
 
     after = body["data"]["after"]
     # Rate limited to 60 requests/min

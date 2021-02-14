@@ -6,10 +6,10 @@ import matplotlib.pyplot as plt
 
 import os
 
-image_size = (224, 224)
+image_size = (140, 140)
 input_shape = image_size + (3,)
 batch_size = 32
-image_dir = "all-images"
+image_dir = "images"
 
 train_ds = tf.keras.preprocessing.image_dataset_from_directory(
     image_dir,
@@ -17,7 +17,7 @@ train_ds = tf.keras.preprocessing.image_dataset_from_directory(
     subset="training",
     seed=1337,
     image_size=image_size,
-    batch_size=batch_size,
+    batch_size=batch_size
 )
 val_ds = tf.keras.preprocessing.image_dataset_from_directory(
     image_dir,
@@ -25,7 +25,7 @@ val_ds = tf.keras.preprocessing.image_dataset_from_directory(
     subset="validation",
     seed=1337,
     image_size=image_size,
-    batch_size=batch_size,
+    batch_size=batch_size
 )
 
 data_augmentation = keras.Sequential(
@@ -80,7 +80,7 @@ def build_model(num_classes, input_shape):
     optimizer = tf.keras.optimizers.Adam(learning_rate=1e-2)
     model.compile(
         optimizer=optimizer,
-        loss=keras.losses.BinaryCrossentropy(),
+        loss=keras.losses.SparseCategoricalCrossentropy(),
         metrics=["accuracy"],
     )
     return model
@@ -102,7 +102,7 @@ def unfreeze_model(model):
     optimizer = tf.keras.optimizers.Adam(learning_rate=1e-4)
     model.compile(
         optimizer=optimizer,
-        loss=keras.losses.BinaryCrossentropy(),
+        loss=keras.losses.SparseCategoricalCrossentropy(),
         metrics=["accuracy"],
     )
 
