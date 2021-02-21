@@ -1,5 +1,6 @@
 const { ActionTypes } = require('botframework-schema')
 const { ActivityTypes, ActivityHandler, MessageFactory } = require('botbuilder')
+const fetch = require('node-fetch')
 
 class BoochBot extends ActivityHandler {
   constructor(conversationState, userState, dialog) {
@@ -41,7 +42,15 @@ class BoochBot extends ActivityHandler {
 
   async handleAttachment(context) {
     const attachment = context.activity.attachments[0]
+
     console.log(attachment)
+    const response = await fetch(process.env.BOOCHBOT_PREDICTION_URL, {
+      body: attachment.content,
+      headers: {
+        'Content-Type': 'application/octet-stream',
+        'Prediction-Key': process.env.BOOCHBOT_PREDICTION_KEY,
+      },
+    })
 
     await context.sendActivities([
       { type: ActivityTypes.Typing },
