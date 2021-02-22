@@ -43,22 +43,40 @@ class BoochBot extends ActivityHandler {
   async handleAttachment(context) {
     const attachment = context.activity.attachments[0]
 
-    console.log(attachment)
     const response = await fetch(process.env.BOOCHBOT_PREDICTION_URL, {
-      body: attachment.content,
+      method: 'POST',
+      body: JSON.stringify({
+        Url: attachment.contentUrl,
+      }),
       headers: {
-        'Content-Type': 'application/octet-stream',
+        'Content-Type': 'application/json',
         'Prediction-Key': process.env.BOOCHBOT_PREDICTION_KEY,
       },
     })
 
+    if (!response.ok) {
+      await context.sendActivities([
+        { type: ActivityTypes.Typing },
+        { type: 'delay', value: 1000 },
+        {
+          type: ActivityTypes.Message,
+          text: 'Something went wrong with processing that file.',
+        },
+      ])
+      return
+    }
+
+    const json = await response.json()
+    const { probability, tagName } = json.predictions[0]
+    const tagDescriptor = tagName === 'mold' ? 'moldy' : 'not moldy'
     await context.sendActivities([
       { type: ActivityTypes.Typing },
       { type: 'delay', value: 1000 },
       {
         type: ActivityTypes.Message,
-        text:
-          "Thanks for the upload, but I don't know how to analyze pictures yet. my creator hasn't trained me.",
+        text: `I'm ${Math.round(
+          probability * 100
+        )}% sure that your kombucha is ${tagDescriptor}.`,
       },
     ])
   }
