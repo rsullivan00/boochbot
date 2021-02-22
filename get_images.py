@@ -27,7 +27,7 @@ def get_access_token():
 def request_posts(after, access_token):
     response = requests.get(
         SEARCH_URL,
-        params={"q": "flair:mold!", "restrict_sr": "on", "after": after},
+        params={"q": "flair:mold", "restrict_sr": "on", "after": after},
         headers={**default_headers, "Authorization": "Bearer {}".format(access_token)},
     )
 
