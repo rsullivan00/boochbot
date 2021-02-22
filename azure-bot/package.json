@@ -9,8 +9,8 @@
         "node": ">=12.18"
     },
     "scripts": {
-        "build": "zip -r azure-bot.zip ./*",
-        "deploy": ". .env && az webapp deployment source config-zip --resource-group $RESOURCE_GROUP --name $NAME --src azure-bot.zip",
+        "build": "yarn install --production && zip -r azure-bot.zip ./",
+        "deploy": ". ./.env && az webapp deployment source config-zip --resource-group $RESOURCE_GROUP --name $APP_SERVICE_NAME --src azure-bot.zip",
         "start": "node ./index.js",
         "watch": "nodemon ./index.js",
         "lint": "eslint .",

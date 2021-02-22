@@ -162,11 +162,8 @@ Once you have all the ingredients,
   }
 
   async sendWelcomeMessage(context) {
-    const membersAdded = context.activity.membersAdded
-    const member = membersAdded[membersAdded.length - 1]
-    const name = member.name || 'there'
     await context.sendActivity(
-      `Hi ${name}! I'm BoochBot, I can answer questions about homebrewing kombucha.`
+      "Hi there! I'm BoochBot, I can answer questions about homebrewing kombucha."
     )
     await this.sendSuggestedActions(context)
   }
