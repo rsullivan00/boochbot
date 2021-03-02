@@ -6,7 +6,12 @@ class BoochBot extends ActivityHandler {
   constructor(conversationState, userState, dialog) {
     super(conversationState, userState, dialog)
     this.onMembersAdded(async (context, next) => {
-      await this.sendWelcomeMessage(context)
+      const membersAdded = context.activity.membersAdded
+      if (
+        membersAdded.some(member => member.id === context.activity.recipient.id)
+      ) {
+        await this.sendWelcomeMessage(context)
+      }
 
       // By calling next() you ensure that the next BotHandler is run.
       await next()
