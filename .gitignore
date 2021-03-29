@@ -2,5 +2,5 @@ images/*
 .env
 *.h5
 node_modules
-RedditBot/bin/Debug
-RedditBot/obj
+reddit-bot/RedditBot/bin
+reddit-bot/RedditBot/obj
